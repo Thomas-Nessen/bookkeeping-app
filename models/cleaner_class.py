@@ -15,7 +15,7 @@ class CleanerClass(object):
             "Amount (EUR)": "Amount",
             "Notifications": "Description"
             }
-
+        print('Renaming columns')
         data = data.rename(columns=rename_cols)
         return data
     
@@ -30,6 +30,7 @@ class CleanerClass(object):
         
     def cleanerController(self, data):
         clean_data = self.renameColumns(data)
+        print('format amounts')
         clean_data['Amount'] = clean_data.apply(lambda x: 
             self.formatAmounts(x['Amount'], x['Debit/credit']), axis=1)
         return clean_data

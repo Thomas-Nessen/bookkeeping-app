@@ -1,4 +1,4 @@
-import view
+# import view
 import os
 import sys
 
@@ -18,12 +18,29 @@ def start():
     clean_data = cleaner.cleanerController(data)
 
     categorizer = CategorizerClass()
-    print(categorizer)
+    
+    # categorize the data
     categorized_data = categorizer.CategorizeController(clean_data)
+    print(categorized_data)
 
-    # input_add_codes = input('Do you want to add codes? (y/n) ')
-    # if input_add_codes == 'y':
-    categorizer.CodesController(categorized_data)
+
+    categorizer.CategoryCodeController(categorized_data)
+
+    # class car ():
+    #     id
+    #     kleur
+    #     start: 
+
+    # def drive(sleutel):
+    
+
+    # class row_obj ():
+    #     id:
+    #     datum
+    #     waarde:
+
+    # list row_obj = [row_obj1, row_obj2,....]
+    # list transacties = [transactie_object, transactie_object,....]
     
 
 
