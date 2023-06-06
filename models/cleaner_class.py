@@ -1,8 +1,7 @@
 
 class CleanerClass(object):
-    def __init__(self) -> None:
-        pass
-
+    def __init__(self, data) -> None:
+        self.data = data
     '''
     Rename columns to a more appropriate name
     '''
@@ -28,9 +27,9 @@ class CleanerClass(object):
         elif deb_cred == "Credit":
             return amount
         
-    def cleanerController(self, data):
-        clean_data = self.renameColumns(data)
+    def cleanerController(self):
+        self.data = self.renameColumns(self.data)
         print('format amounts')
-        clean_data['Amount'] = clean_data.apply(lambda x: 
+        self.data['Amount'] = self.data.apply(lambda x: 
             self.formatAmounts(x['Amount'], x['Debit/credit']), axis=1)
-        return clean_data
+        return

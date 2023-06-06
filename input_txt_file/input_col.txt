@@ -1,0 +1,10 @@
+
+With which column do you want to identify this transaction:
+
+1. Name
+2. Counterparty
+3. Tag
+4. Description
+
+0. Skip
+Please enter a number between 1 and 4.

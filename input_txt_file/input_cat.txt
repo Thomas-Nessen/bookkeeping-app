@@ -1,0 +1,9 @@
+
+What category does this transactions belongs to:
+
+1. Income               2. Transport
+3. Groceries            4. Tikkies
+5. Food and Drinks      6. Leisure
+7. Other                8. Monthly Expenses
+
+0. Skip this row
