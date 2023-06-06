@@ -1,8 +1,8 @@
 import time
 
 class DisplayClass(object):
-    def __init__(self) -> None:
-        pass
+    def __init__(self):
+        self.input = None
 
     def ask_for_input(self, input_text:str, nr_of_options:int, max_nr_of_tries:int = 4):
         """
@@ -23,6 +23,7 @@ class DisplayClass(object):
                 if input_given in range(0,nr_of_options):
                     input_confirmed = input(f"You entered: \033[1m{input_given}\033[0m .Please confirm (y/n): ")
                     if input_confirmed.lower() == 'y':
+                        # self.input = input_given
                         return input_given
                     else:
                         print("Oke, let\'s try that again!")
@@ -42,50 +43,35 @@ class DisplayClass(object):
             if nr_of_tries == max_nr_of_tries:
                 print("Too many tries, skipped this action (0)")
                 time.sleep(1.5)
+                # self.input = 0
                 return 0
             else:
                 nr_of_tries += 1
     
 
-    def ask_for_new_code(self):
-        while True:
-            code_given = input("Please enter the code you want to sort these kind of transactions with")
+    def ask_for_code_input(self):
+        input_given = False
+        nr_of_tries = 1
+        while not input_given:
+            code_given = input("Please enter the code you want to sort these kind of transactions with: ")
             input_confirmed = input(f"You entered: \033[1m{code_given}\033[0m .Please confirm (y/n): ")
             if input_confirmed.lower() == 'y':
-                return input_given
+                return code_given
             else:
                 print("Oke, let\'s try that again!")
                 time.sleep(1.5)
+    
+    def create_input_text_col(sorting_codes:dict):
+        output = "What category does this transactions belongs to:"
+        for i, cat in enumerate(sorting_codes.keys()):
+            if i in (0 or range(2,len(sorting_codes),3)):
+                print(i)
+                output += '\n'
+            if i <= 17 :
+                output += f"{str(i+1)}: {cat}"
+                output += 2*'\t'
+            else:
+                raise Exception
         
-
-    def ask_for_cat_input(self):
-        input_cat_text = '''
-What category does this transactions belongs to:
-
-1. Income
-2. Transport
-3. Groceries
-4. Tikkies
-5. Food and Drinks
-6. Leisure
-7. Other
-8. Monthly Expenses
-
-0. Skip this row
-'''
-        self.askForInput(input_text=input_cat_text, nr_of_options=9)
-
-
-    def ask_for_col_input(self):
-        input_col_text = '''
-With which column do you want to identify this transaction: \
-
-1. Name
-2. Counterparty
-3. Tag
-4. Description
-
-0. Skip
-Please enter a number between 1 and 4.
-'''
-        self.askForInput(input_text=input_col_text, nr_of_options=5)
+        output += "\n0. Skip this row"
+        return output
