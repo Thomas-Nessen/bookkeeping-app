@@ -1,5 +1,7 @@
 import pandas as pd
 import locale as lc
+import json
+import os
 
 from models.cleaner_class import CleanerClass
 
@@ -13,7 +15,7 @@ class FileHandler(object):
     Read csv file, select columns, set data types
     '''
     @classmethod
-    def readFile(self, path, file, sep=';'): # add cols
+    def read_csv_file(self, path, file, sep=';'): # add cols
         cols = {"Date": str,
                 "Name / Description": str,
                 "Counterparty": str,	
@@ -34,6 +36,36 @@ class FileHandler(object):
         )
         return ta_data
 
-        
-    def fileHandlerController(self, path, file):
-        pass
+        '''
+    Read the contents from json file into a dictionary
+    '''
+    def read_txt_file(self, path2txt:str):
+        try:
+            with open(path2txt) as txt_file:
+                txt_cont = txt_file.read()
+            return txt_cont
+        except Exception as e: 
+            print(e)
+
+    '''
+    Read the contents from json file into a dictionary
+    '''
+    def read_json_file(self, path2json='bookkeeping-app\sorting_codes.json'):
+        try:
+            with open(path2json) as json_file:
+                json_dict = json.load(json_file)
+            return json_dict
+        except Exception as e: 
+            print(e)
+
+    '''
+    Write the contents of a dictionary into a json file
+    '''
+    def write_json_file(self, input_dict:dict, path='bookkeeping-app\sorting_codes.json'):
+        try:
+            with open(path, 'w') as outfile:
+                json.dump(input_dict, outfile)
+            return True
+        except Exception as e:
+            print(e)
+            raise TypeError
