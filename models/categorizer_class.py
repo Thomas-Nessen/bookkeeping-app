@@ -1,6 +1,7 @@
 import json
 from time import sleep
 import numpy as np
+import pandas as pd
 from models.display_class import DisplayClass
 from models.file_handler import FileHandler
 
@@ -8,7 +9,7 @@ class CategorizerClass(object):
    def __init__(self, clean_data):
       self.display = DisplayClass()
       self.file_handler = FileHandler()
-      self.sorting_codes = self.file_handler.read_json_file()
+      self.sorting_codes:dict = self.file_handler.read_json_file()
       self.data = clean_data
    '''
    Display the sorting codes currently in the dictionary
@@ -47,9 +48,14 @@ class CategorizerClass(object):
       print(F'Transaction not found')
       return np.nan
    
-   
+
    def CategoryCodeController(self):
-       # At some point the input text should be generate from the .json file.
+      '''
+      This function contains the logic to assign sorting categories to specific codes.
+      The user is given an unsorted row and asked to give a category and sorting code. 
+      This key-value pair is than added to the sorting codes dictionary class attribute
+      Finally the json file is updated with the new dictionary. 
+      '''
       
       rows_to_sort = self.data[self.data['Category'].isnull()]
       print(f"Number of unsorted transactions: {len(rows_to_sort)}")
@@ -57,9 +63,10 @@ class CategorizerClass(object):
       if input_add_codes.lower() != 'y':
          return 
       else: 
-         # TO DO:
-         # this could be made dynamic so new categories are automatically displayed
-         input_text_cat = self.file_handler.read_txt_file(path2txt='bookkeeping-app\\input_txt_file\\input_cat.txt')
+
+         # input_text_cat = self.file_handler.read_txt_file(path2txt='bookkeeping-app\\input_txt_file\\input_cat.txt')
+         
+         # The available columns at this point are always the same, no need for dynamic solution.
          input_text_col = self.file_handler.read_txt_file(path2txt='bookkeeping-app\\input_txt_file\\input_col.txt')
          for index, row in rows_to_sort.iterrows():
             print('###############################################################################')
@@ -67,20 +74,29 @@ class CategorizerClass(object):
             # Find a nicer way to display the transaction
             print(row)
 
-            cat_input = self.display.ask_for_input(input_text=input_text_cat, nr_of_options=9)
-            # return a number between 0 and 8 (0 being a skip)
-            if cat_input != 0:
-               self.data.iat[index, -1] = cat_input
-               
-               col_input = self.display.ask_for_input(input_text=input_text_col, nr_of_options=5)
-               # print('TYPE col_input' + type(col_input))      # return a number between 0 and 8 (0 being a skip)
-               if col_input != 0:
+            # Read the current categories from the sorting codes and create a display text
+            input_text_cat, nr_of_cat_options = self.display.create_input_text_cat(self.sorting_codes)
+            cat_input_number = self.display.ask_for_input(input_text=input_text_cat, nr_of_options=nr_of_cat_options)
+            if cat_input_number != 0:  # return a number between 0 and 8 (0 being a skip)
+               # alter the data at this index with get the category name from sorting codes
+               cat_input_name = list(self.sorting_codes.keys())[cat_input_number-1]   # -1 because list index starts at 0
+               self.data.iat[index, -1] = cat_input_name
+            
+               col_input_number = self.display.ask_for_input(input_text=input_text_col, nr_of_options=5)
+
+               if col_input_number != 0: # return a number between 0 and 8 (0 being a skip)
+                  static_columns = ["Name", "Counterparty", "Tag", "Description"]
+                  col_input_name = static_columns[col_input_number-1]
+                  
                   code_input = self.display.ask_for_code_input()
-                  print(code_input)
-                  self.data.iat[index, -1] = cat_input
-                  print(self.data.loc[[index]])
-                  #
-                  # Add code to json
+                  
+                  print(f"\nCategory: {cat_input_name}\nColumn: {col_input_name}\nCode: {code_input}")
+                  verify_add_code= input(f'Do you want to add this sorting code? (y/n)')
+                  if verify_add_code.lower() == 'y':
+                     self.sorting_codes[cat_input_name][col_input_name].append(code_input)
+                  else: 
+                     print('Skipping this transaction!')
+                     sleep(1.5)
                else:
                   print('Skipping this transaction!')
                   sleep(1.5)
@@ -88,6 +104,8 @@ class CategorizerClass(object):
                print('Skipping this transaction!')
                sleep(1.5)
 
+         print("updating sorting codes file (if applicable)")
+         self.file_handler.write_json_file(input_dict=self.sorting_codes)
             
 
    def CategorizeController(self):

@@ -50,6 +50,10 @@ class DisplayClass(object):
     
 
     def ask_for_code_input(self):
+        '''
+        returns a string that can be used as a code in the sorting dictionary.
+        
+        '''
         input_given = False
         nr_of_tries = 1
         while not input_given:
@@ -61,17 +65,18 @@ class DisplayClass(object):
                 print("Oke, let\'s try that again!")
                 time.sleep(1.5)
     
-    def create_input_text_col(sorting_codes:dict):
-        output = "What category does this transactions belongs to:"
+    def create_input_text_cat(self, sorting_codes:dict):
+        '''
+        This function create a dynamic display text of the categories in the sorting_codes.
+        It return also the number of total options (including the 0. Skip)
+        '''
+        index_w_enter = [0]
+        index_w_enter.extend(range(3,len(sorting_codes),3))
+        output = "What category does this transactions belongs to:\n"
         for i, cat in enumerate(sorting_codes.keys()):
-            if i in (0 or range(2,len(sorting_codes),3)):
-                print(i)
-                output += '\n'
-            if i <= 17 :
-                output += f"{str(i+1)}: {cat}"
-                output += 2*'\t'
-            else:
-                raise Exception
-        
+            if i in index_w_enter:
+                output += "\n"
+            col_txt= f"{str(i+1)}: {cat}"
+            output += '{:<20}'.format(col_txt)    
         output += "\n0. Skip this row"
-        return output
+        return output, (len(sorting_codes)+1)
