@@ -9,22 +9,22 @@ from models.categorizer_class import CategorizerClass
 
 def start():
     fileHandler = FileHandler()
-    data = fileHandler.readFile(
-        path= os.getcwd() + '\\bookkeeping-app\\raw_transactions_csv\\'
+    data = fileHandler.read_csv_file(
+        path= 'C:\\Users\\Gebruiker\\Documents\\GitHub\\bookkeeping-app\\bookkeeping-app\\raw_transactions_csv\\'
         ,file= 'TEST_transactions.csv' 
     )
 
-    cleaner = CleanerClass()
-    clean_data = cleaner.cleanerController(data)
+    cleaner = CleanerClass(data)
+    clean_data = cleaner.cleanerController()
 
-    categorizer = CategorizerClass()
+    categorizer = CategorizerClass(cleaner.data)
     
     # categorize the data
-    categorized_data = categorizer.CategorizeController(clean_data)
-    print(categorized_data)
+    categorized_data = categorizer.CategorizeController()
+    # print(categorized_data)
 
 
-    categorizer.CategoryCodeController(categorized_data)
+    #categorizer.CategoryCodeController(categorized_data)
 
     # class car ():
     #     id
