@@ -1,6 +1,11 @@
 import time
 
 class DisplayClass(object):
+    """
+    This class is used for all the text and options that are displayed to the user.
+    It includes input questions with build in verification and checks to make sure the correct input is given.
+    This class is used in the user interactino for adding sorting codes and visualizing the data
+    """
     def __init__(self):
         self.input = None
 
